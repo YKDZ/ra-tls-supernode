@@ -1,0 +1,30 @@
+services:
+  superlink:
+    image: flwr/superlink:1.22.0
+    ports:
+      - "9091:9091"
+      - "9092:9092"
+      - "9093:9093"
+    volumes:
+      - ./certificates:/app/certificates
+    command: >
+      --isolation process
+      --ssl-ca-certfile certificates/ca.crt
+      --ssl-certfile certificates/server.pem
+      --ssl-keyfile certificates/server.key
+
+  supernode-1:
+    image: ykdz/ra-tls-supernode:latest
+    ports:
+      - "9094:9094"
+    volumes:
+      - ./certificates/ca.crt:/app/certificates/ca.crt
+    command: >
+      --superlink superlink:9092
+      --node-config "partition-id=0 num-partitions=2"
+      --clientappio-api-address 0.0.0.0:9094
+      --isolation process
+      --root-certificates certificates/ca.crt
+    environment:
+      - SUPERLINK_HOST=superlink
+      - SUPERLINK_PORT=9092

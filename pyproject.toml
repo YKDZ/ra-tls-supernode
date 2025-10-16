@@ -1,0 +1,25 @@
+[project]
+name = "ra-tls-supernode"
+version = "0.1.0"
+description = "Transparent proxy enforcing Intel SGX RA-TLS attestation for Flower supernode"
+readme = "README.md"
+authors = [{ name = "ykdz" }]
+requires-python = ">=3.12"
+dependencies = [
+    "cryptography>=43.0.2",
+    "uvloop>=0.19.0; sys_platform != 'win32'",
+]
+
+[project.scripts]
+ra-tls-proxy = "ra_tls_proxy.__main__:main"
+ra-tls-resolve-host = "ra_tls_proxy.resolve:main"
+
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
